@@ -4,11 +4,14 @@ import socket,struct,textwrap,os
 
 def main():
 	conn = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
+	broadcast = 0
 	while True:
 		raw_data, addr = conn.recvfrom(65536)
 		dest_mac, src_mac, eth_proto, data = ethernet_frame(raw_data)
-		print('\n Ethernet Frame:')
-		print('Destination: {}, Source:{}, Protocol: {}'.format(dest_mac, src_mac, eth_proto))
+		if dest_mac == 'FF:FF:FF:FF:FF:FF':
+			broadcast += 1
+		
+		print('Destination: {}, Source:{}, broadcast: {}'.format(dest_mac, src_mac, broadcast),end='\r')
 
 
 # unpack ethernet frame
